@@ -1,6 +1,6 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
-name: build_and_deploy
+name: Flag_deployement
 on:
   push:
     branches:
@@ -42,3 +42,19 @@ jobs:
           dockerfile: Dockerfile
           context: .
           destination: ${{ secrets.dockerurl }}/${{ secrets.dockerusername }}/petclinic:3.2.4
+
+  Deploy:
+    needs: Build
+    environment: production
+    steps:
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
+      - uses: cashokannamalai/kubeconfig@v1
+        name: Set kubeconfig
+        with:
+          secname: ${{ secrets.kubeconfig }}
+      - uses: cloudbees-io/kustomize-deploy@v1
+        name: deploy
+        kind: deploy
+        with:
+          kustomization-base-dir: ${{ cloudbees.workspace }}/base

@@ -10,7 +10,7 @@ spec:
     - host: ""
       http:
         paths:
-          - path: /pets
+          - path: /pet
             pathType: Prefix
             backend:
               service:

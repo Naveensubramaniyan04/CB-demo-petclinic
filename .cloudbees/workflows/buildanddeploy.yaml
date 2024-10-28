@@ -21,7 +21,7 @@ jobs:
         kind: build
         run: |
          mvn spring-javaformat:apply
-         mvn clean package
+         mvn clean install
         shell: sh
 
       - name: Verify Dockerfile location

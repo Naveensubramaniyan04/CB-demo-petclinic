@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class FontColorController {
 
-	@GetMapping("/fontColor")
+	@GetMapping("/v1/fontColor")
 	@ResponseBody
 	public String getFontColor() {
 		return PetClinicApplication.flags.titleColors.getValue();
 	}
 
-	@GetMapping("/fontSize")
+	@GetMapping("/v1/fontSize")
 	@ResponseBody
 	public int getFontSize() {
 		return PetClinicApplication.flags.titleSize.getValue();

@@ -159,7 +159,7 @@
         // JavaScript function to call the backend and change h2 font color
         function fetchAndChangeH1Color() {
             // Fetch the font color from the backend (Spring Boot controller)
-            fetch('/fontColor')
+            fetch('/v1/fontColor')
                 .then(response => response.text())  // Parse the response as plain text
                 .then(color => {
                     // Get all h1 elements
@@ -174,7 +174,7 @@
         }
         function fetchAndChangeH1Size() {
             // Fetch the font color from the backend (Spring Boot controller)
-            fetch('/fontSize')
+            fetch('/v1/fontSize')
                 .then(response => response.text())  // Parse the response as plain text
                 .then(size => {
                  console.log(size)

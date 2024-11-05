@@ -12,12 +12,14 @@ public class FontColorController {
 	@GetMapping("/v1/fontColor")
 	@ResponseBody
 	public String getFontColor() {
+		System.out.println("API ENTRY FONT COLOR : " + etClinicApplication.flags.titleColors.getValue());
 		return PetClinicApplication.flags.titleColors.getValue();
 	}
 
 	@GetMapping("/v1/fontSize")
 	@ResponseBody
 	public int getFontSize() {
+		System.out.println("API ENTRY Size COLOR : " + PetClinicApplication.flags.titleSize.getValue());
 		return PetClinicApplication.flags.titleSize.getValue();
 	}
 

@@ -12,7 +12,7 @@ public class FontColorController {
 	@GetMapping("/v1/fontColor")
 	@ResponseBody
 	public String getFontColor() {
-		System.out.println("API ENTRY FONT COLOR : " + etClinicApplication.flags.titleColors.getValue());
+		System.out.println("API ENTRY FONT COLOR : " + PetClinicApplication.flags.titleColors.getValue());
 		return PetClinicApplication.flags.titleColors.getValue();
 	}
 

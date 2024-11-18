@@ -2,7 +2,7 @@ apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: Flag_deployement
 on:
-  push:
+  pull_request:
     branches:
       - master
 jobs:
@@ -12,22 +12,18 @@ jobs:
         uses: docker://alpine/git:latest
         run: |
           git config --global --add safe.directory /cloudbees/workspace
-
       - name: Checkout
         uses: cloudbees-io/checkout@v1
-      
       - uses: docker://maven:3-eclipse-temurin-17
         name: Build
         kind: build
         run: |
-         mvn spring-javaformat:apply
-         mvn clean package
+          mvn spring-javaformat:apply
+          mvn clean install
         shell: sh
-
       - name: Verify Dockerfile location
         uses: docker://maven:3-eclipse-temurin-17
         run: ls -al ./
-      
       - name: Configure container registry credentials
         id: dockerconfig
         uses: cloudbees-io/configure-oci-credentials@v1
@@ -35,14 +31,12 @@ jobs:
           registry: ${{ secrets.dockerurl }}
           username: ${{ secrets.dockerusername }}
           password: ${{ secrets.dockerpasswd }}
-          
       - name: Push image to OCI registry
         uses: cloudbees-io/kaniko@v1
         with:
           dockerfile: Dockerfile
           context: .
           destination: ${{ secrets.dockerurl }}/${{ secrets.dockerusername }}/petclinic:3.2.4
-
   Deploy:
     needs: Build
     environment: production
@@ -58,3 +52,4 @@ jobs:
         kind: deploy
         with:
           kustomization-base-dir: ${{ cloudbees.workspace }}/base
+

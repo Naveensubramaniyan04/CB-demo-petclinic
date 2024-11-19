@@ -41,8 +41,8 @@ jobs:
 
   StaticAnalysis:
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
       - name: Scan with SonarQube
         uses: cloudbees-io/sonarqube-sast-scan-code@v1
     with:

@@ -51,7 +51,7 @@ jobs:
      - name: Scan with SonarQube
        uses: cloudbees-io/sonarqube-sast-scan-code@v1
        with:
-          server-url: ${{ vars.SONARQUBE_SERVER_URL }}
+          server-url: ${{ secrets.SONARQUBE_SERVER_URL }}
           username: ${{ secrets.SONARQUBE_USERNAME }}
           password: ${{ secrets.SONARQUBE_PASSWORD }}
           language: "LANGUAGE_JAVA"        

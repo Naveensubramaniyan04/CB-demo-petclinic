@@ -43,6 +43,19 @@ jobs:
           context: .
           destination: ${{ secrets.dockerurl }}/${{ secrets.dockerusername }}/petclinic:3.2.4
 
+
+
+  StaticAnalysis:
+    steps:
+
+     - name: Scan with SonarQube
+       uses: cloudbees-io/sonarqube-sast-scan-code@v1
+       with:
+          server-url: ${{ vars.SONARQUBE_SERVER_URL }}
+          username: ${{ secrets.SONARQUBE_USERNAME }}
+          password: ${{ secrets.SONARQUBE_PASSWORD }}
+          language: "LANGUAGE_JAVA"        
+
   Deploy:
     needs: Build
     environment: production

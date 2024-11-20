@@ -40,28 +40,17 @@ jobs:
 
   StaticAnalysis:
     steps:
+    - name: Checkout
+      uses: cloudbees-io/checkout@v1
+
     - name: Scan with SonarQube bundled
       uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
       with:
-        sonar-exclusion: sonar/*
-        cover-file-name: ./coverage.xml
+        sonar-exclusion: src/main/java
+        cover-file-name: ./pom.xml
         language: LANGUAGE_JAVA
 
-    - name: SonarQube Analysis
-      uses: docker://sonarsource/sonar-scanner-cli:latest
-      with:
-          entrypoint: ""
-      run: |
-          sonar-scanner \
-            -Dsonar.projectKey=CBDEMO-sample \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=${{ secrets.SONARQUBE_SERVER_URL }} \
-            -Dsonar.login=${{ secrets.SONARQUBE_USERNAME }} \
-            -Dsonar.password=${{ secrets.SONARQUBE_PASSWORD }} \
-            -Dsonar.language=java \
-            -Dsonar.exclusions=**/test/**,**/docs/** \
-            -Dsonar.coverage.exclusions=**/generated/** \
-            -Dsonar.junit.reportPaths=target/surefire-reports
+    
         
   Deploy:
     environment: production

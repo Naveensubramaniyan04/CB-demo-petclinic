@@ -61,8 +61,6 @@ jobs:
         sonar-exclusion: src/main/java
         cover-file-name: ./pom.xml
         language: LANGUAGE_JAVA
-
-    
         
   Deploy:
     environment: production

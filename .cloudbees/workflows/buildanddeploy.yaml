@@ -4,7 +4,7 @@ name: Flag_deployement
 on:
   pull_request:
     branches:
-      - master
+      - naveen123
 jobs:
   Build:
     steps:
@@ -21,6 +21,16 @@ jobs:
           mvn spring-javaformat:apply
           mvn clean install
         shell: sh
+      - name: SonarQube analysis
+        uses: docker://sonarsource/sonar-scanner-cli:latest
+        run: |+
+          sonar-scanner \
+            -Dsonar.projectKey=CBDEMO-sample  \
+            -Dsonar.sources=.\
+            -Dsonar.java.binaries=/cloudbees/workspace/target/classes \
+            -Dsonar.host.url=${{ secrets.SONARQUBE_SERVER_URL }}  \
+            -Dsonar.login=dc6079213b40e88694dbada6c82f34404b4df6fd
+            
       - name: Verify Dockerfile location
         uses: docker://maven:3-eclipse-temurin-17
         run: ls -al ./
@@ -37,8 +47,17 @@ jobs:
           dockerfile: Dockerfile
           context: .
           destination: ${{ secrets.dockerurl }}/${{ secrets.dockerusername }}/petclinic:3.2.4
+  StaticAnalysis:
+    steps:
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
+      - name: Scan with SonarQube bundled
+        uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
+        with:
+          sonar-exclusion: src/main/java
+          cover-file-name: ./pom.xml
+          language: LANGUAGE_JAVA
   Deploy:
-    needs: Build
     environment: production
     steps:
       - name: Checkout
@@ -52,3 +71,4 @@ jobs:
         kind: deploy
         with:
           kustomization-base-dir: ${{ cloudbees.workspace }}/base
+    needs: Build

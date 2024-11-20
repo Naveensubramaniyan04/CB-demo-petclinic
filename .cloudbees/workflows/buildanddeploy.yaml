@@ -23,9 +23,6 @@ jobs:
         shell: sh
 
 
-      
-
-
       - name: SonarQube analysis
         uses: docker://sonarsource/sonar-scanner-cli:latest
         run: |

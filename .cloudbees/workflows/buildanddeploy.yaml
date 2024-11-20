@@ -37,22 +37,25 @@ jobs:
           dockerfile: Dockerfile
           context: .
           destination: ${{ secrets.dockerurl }}/${{ secrets.dockerusername }}/petclinic:3.2.4
+
   StaticAnalysis:
     steps:
-      - name: Scan with SonarQube bundled
-        uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
-        with:
-          sonar-exclusion: sonar/*
-          cover-file-name: ./coverage.xml
-          language: LANGUAGE_JAVA
+    - name: Scan with SonarQube bundled
+      uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
+      with:
+        sonar-exclusion: sonar/*
+        cover-file-name: ./coverage.xml
+        language: LANGUAGE_JAVA
 
-      - name: Scan with SonarQube
-        uses: cloudbees-io/sonarqube-sast-scan-code@v1
-        with:
-          server-url: ${{ secrets.SONARQUBE_SERVER_URL }}
-          username: ${{ secrets.SONARQUBE_USERNAME }}
-          password: ${{ secrets.SONARQUBE_PASSWORD }}
-          language: "LANGUAGE_JS"
+    - name: Scan with SonarQube
+      uses: cloudbees-io/sonarqube-sast-scan-code@v1
+      with:
+        server-url: ${{ secrets.SONARQUBE_SERVER_URL }}
+        username: ${{ secrets.SONARQUBE_USERNAME }}
+        password: ${{ secrets.SONARQUBE_PASSWORD }}
+        language: "LANGUAGE_JS"
+        sonar.verbose: true
+        
   Deploy:
     environment: production
     steps:

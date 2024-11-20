@@ -47,13 +47,21 @@ jobs:
         cover-file-name: ./coverage.xml
         language: LANGUAGE_JAVA
 
-    - name: Scan with SonarQube
-      uses: cloudbees-io/sonarqube-sast-scan-code@v1
+    - name: SonarQube Analysis
+      uses: docker://sonarsource/sonar-scanner-cli:latest
       with:
-        server-url: ${{ secrets.SONARQUBE_SERVER_URL }}
-        username: ${{ secrets.SONARQUBE_USERNAME }}
-        password: ${{ secrets.SONARQUBE_PASSWORD }}
-        language: "LANGUAGE_JS"
+          entrypoint: ""
+      run: |
+          sonar-scanner \
+            -Dsonar.projectKey=CBDEMO-sample \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${{ secrets.SONARQUBE_SERVER_URL }} \
+            -Dsonar.login=${{ secrets.SONARQUBE_USERNAME }} \
+            -Dsonar.password=${{ secrets.SONARQUBE_PASSWORD }} \
+            -Dsonar.language=java \
+            -Dsonar.exclusions=**/test/**,**/docs/** \
+            -Dsonar.coverage.exclusions=**/generated/** \
+            -Dsonar.junit.reportPaths=target/surefire-reports
         
   Deploy:
     environment: production

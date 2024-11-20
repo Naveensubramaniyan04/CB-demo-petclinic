@@ -21,6 +21,24 @@ jobs:
           mvn spring-javaformat:apply
           mvn clean install
         shell: sh
+
+
+      - name: SonarQube Analysis
+        uses: docker://sonarsource/sonar-scanner-cli:latest
+        with:
+          entrypoint: ""
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=CBDEMO-sample \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${{ secrets.SONARQUBE_SERVER_URL }} \
+            -Dsonar.login=${{ secrets.SONARQUBE_USERNAME }} \
+            -Dsonar.password=${{ secrets.SONARQUBE_PASSWORD }} \
+            -Dsonar.language=java \
+            -Dsonar.exclusions=**/test/**,**/docs/** \
+            -Dsonar.coverage.exclusions=**/generated/** \
+            -Dsonar.junit.reportPaths=target/surefire-reports
+            
       - name: Verify Dockerfile location
         uses: docker://maven:3-eclipse-temurin-17
         run: ls -al ./

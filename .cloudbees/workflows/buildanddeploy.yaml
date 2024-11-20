@@ -54,7 +54,6 @@ jobs:
         username: ${{ secrets.SONARQUBE_USERNAME }}
         password: ${{ secrets.SONARQUBE_PASSWORD }}
         language: "LANGUAGE_JS"
-        sonar.verbose: true
         
   Deploy:
     environment: production

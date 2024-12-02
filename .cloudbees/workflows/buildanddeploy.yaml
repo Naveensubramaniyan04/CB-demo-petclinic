@@ -21,11 +21,9 @@ jobs:
           mvn spring-javaformat:apply
           mvn clean install
         shell: sh
-
-
       - name: SonarQube analysis
         uses: docker://sonarsource/sonar-scanner-cli:latest
-        run: |
+        run: |+
           sonar-scanner \
             -Dsonar.projectKey=CBDEMO-sample  \
             -Dsonar.sources=.\
@@ -49,19 +47,16 @@ jobs:
           dockerfile: Dockerfile
           context: .
           destination: ${{ secrets.dockerurl }}/${{ secrets.dockerusername }}/petclinic:3.2.4
-
   StaticAnalysis:
     steps:
-    - name: Checkout
-      uses: cloudbees-io/checkout@v1
-
-    - name: Scan with SonarQube bundled
-      uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
-      with:
-        sonar-exclusion: src/main/java
-        cover-file-name: ./pom.xml
-        language: LANGUAGE_JAVA
-        
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
+      - name: Scan with SonarQube bundled
+        uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v1
+        with:
+          sonar-exclusion: src/main/java
+          cover-file-name: ./pom.xml
+          language: LANGUAGE_JAVA
   Deploy:
     environment: production
     steps:
@@ -77,3 +72,12 @@ jobs:
         with:
           kustomization-base-dir: ${{ cloudbees.workspace }}/base
     needs: Build
+  Naveen:
+    timeout-minutes: 4320
+    delegates: cloudbees-io/manual-approval/custom-job.yml@v1
+    with:
+      approvers: ""
+      disallowLaunchByUser: false
+      notifyAllEligibleUsers: false
+      instructions: ""
+      
